@@ -1,6 +1,6 @@
-# Welcome to the Seasons of Serverless!
-
 ![banner](graphics/seasons-of-serverless-banner.png)
+
+# Welcome to the Seasons of Serverless!
 
 Welcome!
 
@@ -28,6 +28,6 @@ Here include all the important features related to the challenges that are integ
 -   ✅ **[Create your first function using Visual Studio Code](https://docs.microsoft.com/azure/azure-functions/functions-create-first-function-vs-code?WT.mc_id=25daysofserverless-github-cxa)**
 -   ✅ **[Free E-Book - Azure Serverless Computing Cookbook, Second Edition](https://azure.microsoft.com/resources/azure-serverless-computing-cookbook/?WT.mc_id=25daysofserverless-github-cxa)**
 
-## Questions? Comments? ❓
+## Questions? Comments?
 
 If you have any doubts about the challenges, feel free to open an **[ISSUE HERE](https://github.com/microsoft/25-days-of-serverless/issues)**. As soon as possible we will be answering any questions/doubts that you may have!
