@@ -2,32 +2,6 @@
 
 # Welcome to the Seasons of Serverless!
 
-Welcome!
-
-Explanation of 7 challenge concept
-
-## Resources/Tools Used 🚀
-
--   **[Visual Studio Code](https://code.visualstudio.com/?WT.mc_id=25daysofserverless-github-cxa)**
--   **[Postman](https://www.getpostman.com/downloads/)**
--   **[Azure Functions Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions&WT.mc_id=25daysofserverless-github-cxa)**
-
-
-## Next Steps 🏃
-
-Learn more about serverless with a Free Training!
-
--   ✅ **[Serverless Free Courses](https://docs.microsoft.com/learn/browse/?term=azure%20functions&WT.mc_id=25daysofserverless-github-cxa)**
-
-## Important Resources ⭐️
-
-Here include all the important features related to the challenges that are integrated into microsoft.docs. Ex.:
-
--   ✅ **[Azure Functions documentation](https://docs.microsoft.com/azure/azure-functions/?WT.mc_id=25daysofserverless-github-cxa)**
--   ✅ **[Azure SDK for JavaScript Documentation](https://docs.microsoft.com/azure/javascript/?WT.mc_id=25daysofserverless-github-cxa)**
--   ✅ **[Create your first function using Visual Studio Code](https://docs.microsoft.com/azure/azure-functions/functions-create-first-function-vs-code?WT.mc_id=25daysofserverless-github-cxa)**
--   ✅ **[Free E-Book - Azure Serverless Computing Cookbook, Second Edition](https://azure.microsoft.com/resources/azure-serverless-computing-cookbook/?WT.mc_id=25daysofserverless-github-cxa)**
-
-## Questions? Comments?
-
-If you have any doubts about the challenges, feel free to open an **[ISSUE HERE](https://github.com/microsoft/25-days-of-serverless/issues)**. As soon as possible we will be answering any questions/doubts that you may have!
+Every year around the holiday season, Dominique and Simone's friends* eagerly look forward to their annual holiday friend potluck. This year, since they can't meet in person to share food and company, they're trying something new: a virtual potluck!
+ 
+Each of their friends is going to be presenting a home-cooked dish from their holiday traditions and culture that's meaningful to them. Each week, you can log on to the Seasons of Serverless site to solve another unique code challenge presented by one of Dominique and Simone's friends and focused on a culinary tradition from around the world.
