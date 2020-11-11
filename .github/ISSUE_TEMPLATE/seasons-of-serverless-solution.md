@@ -1,12 +1,9 @@
----
-name: Seasons of Serverless Solution
-about: Use this issue template to submit a solution for Seasons of Serverless
-title: Solution
-labels: ''
-assignees: ''
+Please provide the following information for your submission:
 
----
+### What is your name? (First, Last)
 
-My solution: [add a link here]()
+### Where is your GitHub Repo ?(Link to your challenge solution)
 
-About my solution: Tell us how you solved this solution, including any challenges you faced solving it!
+### What Challenge is this for? (Challenge number between 1 and 7)
+
+### (Optional) Anything else we should know? e.g., language used, location, blog post, tell us how you solved this solution, including any challenges you faced solving it.
