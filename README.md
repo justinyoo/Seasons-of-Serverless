@@ -1,4 +1,4 @@
-![banner](graphics/seasons-of-serverless-banner.png)
+![banner](graphics/seasons-of-serverless-banner-animated.gif)
 
 # Welcome to the Seasons of Serverless!
 
