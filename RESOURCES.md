@@ -28,6 +28,10 @@ Here is a list of resource links that you can use for the challenges. These are 
 * [Develop, test and deploy an Azure Function with Visual Studio ](https://docs.microsoft.com/en-us/learn/modules/develop-test-deploy-azure-functions-with-visual-studio/?WT.mc_id=25daysofserverless-github-cxa)
 * [Execute an Azure Function with triggers](https://docs.microsoft.com/en-us/learn/modules/execute-azure-function-with-triggers/?WT.mc_id=25daysofserverless-github-cxa)
 * [Chain Azure Functions together using input and output bindings](https://docs.microsoft.com/en-us/learn/modules/chain-azure-functions-data-using-bindings/?WT.mc_id=25daysofserverless-github-cxa)
+* [Publish an API to Azure Static Web Apps](https://docs.microsoft.com/en-gb/learn/modules/publish-static-web-app-api-preview-url/)
+* [Publish an Angular, React, Svelte, or Vue JavaScript app with Azure Static Web Apps](https://docs.microsoft.com/en-gb/learn/modules/publish-app-service-static-web-app-api/)
+* [Publish a Blazor WebAssembly app and .NET API with Azure Static Web Apps](https://docs.microsoft.com/en-gb/learn/modules/publish-app-service-static-web-app-api-dotnet/)
+* [Create and publish a static web app with Gatsby and Azure Static Web Apps](https://docs.microsoft.com/en-gb/learn/modules/create-deploy-static-webapp-gatsby-app-service/)
 * [Enable automatic updates in a web application using Azure Functions and SignalR Service ](https://docs.microsoft.com/en-us/learn/modules/automatic-update-of-a-webapp-using-azure-functions-and-signalr/?WT.mc_id=25daysofserverless-github-cxa)
 * [Develop, test and publish Azure Functions by using Azure Functions Core Tools](https://docs.microsoft.com/en-us/learn/modules/develop-test-deploy-azure-functions-with-core-tools//?WT.mc_id=25daysofserverless-github-cxa)
 * [Share your location as a text message using Azure Functions and Twilio ](https://docs.microsoft.com/en-us/learn/modules/send-location-over-sms-using-azure-functions-twilio/?WT.mc_id=25daysofserverless-github-cxa)
@@ -58,6 +62,10 @@ Here is a list of resource links that you can use for the challenges. These are 
 * [Use _Java_ and Maven to create and publish a function to Azure](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-java-maven?WT.mc_id=25daysofserverless-github-cxa)
 * [Create your first _PowerShell_ function in Azure](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-powershell?WT.mc_id=25daysofserverless-github-cxa)
 * [Create an HTTP triggered _Python_ function in Azure](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-python?WT.mc_id=25daysofserverless-github-cxa)
+
+> Azure Static Web Apps
+
+* [Create Static Sites with Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/)
 
 > Triggers & Bindings
 
