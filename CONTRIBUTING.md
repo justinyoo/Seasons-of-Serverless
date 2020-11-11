@@ -2,7 +2,7 @@
 
 > Parts of this section are replicated in the [README.md](README.md) for convenience
 
-The seven #SeasonsOfServerless challenges happen between November 23, 2020 and January 10, 2021. This repository is the main resource and challenges are posted weekly to its [README.md](README.md) and in the eekly folders. Be among the first contributors and solve the challenge within a week of publishing. Then submit your solution to this repo as described below.
+The seven #SeasonsOfServerless challenges happen weekly between November 23, 2020 and January 10, 2021. This repository is the main resource and challenges are posted weekly to its [README.md](README.md) and in the eekly folders. Be among the first contributors and solve the challenge within a week of publishing. Then submit your solution to this repo as described below.
 
 ## Contributing 🚩
 
