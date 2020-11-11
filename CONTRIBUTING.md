@@ -24,14 +24,14 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 🚨 **Submission Process:** Starting November 23, 2020 🚨
 
  1. Create a public GitHub repo with your solution for that challenge
- 2. Fill in the details for the [Challenge Solution Submission](https://github.com/microsoft/seasons-of-serverless/issues/new?assignees=&labels=challenge-submission&template=challenge-solution-submission.md&title=%5BCHALLENGE+SUBMISSION%5D+) issue and submit.
+ 2. Fill in the details for the [Challenge Solution Submission](https://github.com/microsoft/Seasons-of-Serverless/issues/new?labels=challenge-submission&template=challenge-solution-submission.md&title=%5BCHALLENGE+SUBMISSION%5D+) issue and submit.
 
 Have questions or comments? Submit a regular [ISSUE](https://github.com/microsoft/25-days-of-serverless/issues/new/choose) here with details.
 
 
 ## Submit your bug reports 🐞
 
- * Help us improve by submitting a bug report as an [ISSUE](https://github.com/microsoft/25-days-of-serverless/issues/new/choose). 
+ * Help us improve by submitting a bug report as an [ISSUE](https://github.com/microsoft/25-days-of-serverless/issues/new?assignees=&labels=&template=bug_report.md&title=). 
  * Please review our [Security Policy](https://github.com/microsoft/25-days-of-serverless/security/policy) if you want to report a vulnerability.
 
 ## Submit your questions or comments 🙌🏼 
