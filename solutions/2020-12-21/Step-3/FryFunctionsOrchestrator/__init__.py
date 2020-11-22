@@ -34,7 +34,10 @@ def orchestrator_function(context: df.DurableOrchestrationContext):
         result = yield context.call_activity('Fry')
 
         is_fried = result['completed']
-        logging.info(msg="is Fried? : " + str(is_fried))
+        custom_status = {'completed': is_fried}
+        context.set_custom_status(custom_status)
+
+        logging.info("Instance {} status : {}".format(context.instance_id, is_fried))
 
     response_data = json.dumps({"completed": is_fried})
     return response_data
