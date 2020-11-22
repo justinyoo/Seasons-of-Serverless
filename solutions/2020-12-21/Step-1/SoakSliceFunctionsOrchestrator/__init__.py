@@ -29,7 +29,10 @@ def orchestrator_function(context: df.DurableOrchestrationContext):
         result = yield context.call_activity('SoakSlice')
 
         is_soaked = result['completed']
-        logging.debug(msg="is Soaked? : " + str(is_soaked))
+        custom_status = {'completed': is_soaked}
+        context.set_custom_status(custom_status)
+
+        logging.info("Instance {} status : {}".format(context.instance_id, is_soaked))
 
     response_data = json.dumps({"completed": is_soaked})
     return response_data
