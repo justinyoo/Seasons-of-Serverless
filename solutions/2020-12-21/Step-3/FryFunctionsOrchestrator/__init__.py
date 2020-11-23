@@ -23,7 +23,7 @@ def orchestrator_function(context: df.DurableOrchestrationContext):
     while not is_fried:
         if is_first:
             # First time to fry
-            delay_time = context.current_utc_datetime + timedelta(seconds=fry_in_min)
+            delay_time = context.current_utc_datetime + timedelta(minutes=fry_in_min)
             is_first = False
 
         else:
