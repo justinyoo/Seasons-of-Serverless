@@ -7,6 +7,7 @@ namespace Seasons_of_Serverless_Step2
 {
     public class Step2_RequestData
     {
+        public string CallBackUrl { get; set; }
         public int TimeToSliceInMinutes { get; set; }
     }
 }
