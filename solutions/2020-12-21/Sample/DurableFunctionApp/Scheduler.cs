@@ -1,39 +1,45 @@
-using System.Net.Http;
-using System.Net.Http.Formatting;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 
 namespace DurableFunctionApp
 {
     public static class Scheduler
     {
-        private static HttpClient httpClient = new HttpClient();
-
         [FunctionName("Scheduler_HttpStart")]
-        public static async Task<HttpResponseMessage> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "orchestrators/{orchestratorName}")] HttpRequestMessage req,
+        public static async Task<IActionResult> HttpStart(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "orchestrators/{orchestratorName}")] HttpRequest req,
             [DurableClient] IDurableOrchestrationClient starter,
             string orchestratorName,
             ILogger log)
         {
-            var input = await req.Content.ReadAsAsync<RequestModel>();
+            var input = default(RequestModel);
+            using (var reader = new StreamReader(req.Body))
+            {
+                var serialised = await reader.ReadToEndAsync();
 
-            var serialised = JsonConvert.SerializeObject(input);
-            log.LogInformation(serialised);
+                log.LogInformation(serialised);
+
+                input = JsonConvert.DeserializeObject<RequestModel>(serialised);
+            }
 
             // Function input comes from the request content.
             var instanceId = await starter.StartNewAsync<RequestModel>(orchestratorName, instanceId: null, input: input);
 
             log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
-            return starter.CreateCheckStatusResponse(req, instanceId);
+            var mgmt = starter.CreateHttpManagementPayload(instanceId);
+
+            return new OkObjectResult(mgmt);
         }
 
         [FunctionName("scheduler")]
@@ -55,7 +61,10 @@ namespace DurableFunctionApp
         }
 
         [FunctionName("SchedulerActivity")]
-        public static async Task<bool> CallResult([ActivityTrigger] string callbackUrl, ILogger log)
+        public static async Task<bool> CallResult(
+            [ActivityTrigger] string callbackUrl,
+            [Queue("sample")] IAsyncCollector<string> queue,
+            ILogger log)
         {
             log.LogInformation($"Callback URL = '{callbackUrl}'.");
 
@@ -64,10 +73,7 @@ namespace DurableFunctionApp
                 return false;
             }
 
-            var payload = new ResponseModel() { Completed = true };
-            var formatter = new JsonMediaTypeFormatter();
-
-            var response = await httpClient.PostAsJsonAsync(callbackUrl, payload);
+            await queue.AddAsync(callbackUrl);
 
             return true;
         }
