@@ -1,0 +1,97 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "koreacentral"
+    },
+    "endpointUrl": {
+      "type": "string"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "state": "Enabled",
+        "parameters": {
+          "azfunc": {
+            "value": {
+              "endpoint": "[parameters('endpointUrl')]"
+            }
+          }
+        },
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "azfunc": {
+              "type": "object",
+              "defaultValue": {}
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "method": "POST",
+                "schema": {
+                  "properties": {
+                    "boughtSlicedGaraetteok": {
+                      "type": "boolean"
+                    },
+                    "timeToSoakInMinutes": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "actions": {
+            "HTTP_Webhook": {
+              "runAfter": {},
+              "type": "HttpWebhook",
+              "inputs": {
+                "subscribe": {
+                  "body": {
+                    "boughtSlicedGaraetteok": "@triggerBody()?['boughtSlicedGaraetteok']",
+                    "callbackUrl": "@{listCallbackUrl()}",
+                    "timeToSoakInMinutes": "@triggerBody()?['timeToSoakInMinutes']"
+                  },
+                  "method": "POST",
+                  "uri": "@parameters('azfunc')['endpoint']"
+                },
+                "unsubscribe": {}
+              }
+            },
+            "Response": {
+              "runAfter": {
+                "HTTP_Webhook": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Response",
+              "kind": "Http",
+              "inputs": {
+                "body": "@body('HTTP_Webhook')",
+                "statusCode": 200
+              }
+            }
+          },
+          "outputs": {}
+        }
+      }
+    }
+  ]
+}
