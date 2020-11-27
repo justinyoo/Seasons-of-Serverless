@@ -25,3 +25,4 @@ def main(req: func.HttpRequest) -> dict:
         )
 
     return pick_data
+ 
