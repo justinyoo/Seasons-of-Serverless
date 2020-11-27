@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using DurableTask.Core.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -15,7 +16,7 @@ namespace Seasons_of_Serverless_Step2
     public static class Step2
     {
         [FunctionName("Step2_HttpStart")]
-        public static async Task<HttpResponseMessage> HttpStart(
+        public static async Task<IActionResult> HttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
             [DurableClient] IDurableOrchestrationClient starter,
             ILogger log)
@@ -23,11 +24,11 @@ namespace Seasons_of_Serverless_Step2
             // Function input comes from the request content.
             var requestData = await req.Content.ReadAsAsync<Step2_RequestData>();
 
-            string instanceId = await starter.StartNewAsync("Step2", requestData);
+            string instanceId = await starter.StartNewAsync("Step2", instanceId: null, requestData);
 
             log.LogWarning($"Started orchestration with ID = '{instanceId}'.");
 
-            return starter.CreateCheckStatusResponse(req, instanceId);
+            return (ActionResult) new OkObjectResult(starter.CreateHttpManagementPayload(instanceId));
         }
 
         [FunctionName("Step2")]
