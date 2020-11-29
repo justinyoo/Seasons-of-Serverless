@@ -74,19 +74,6 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
         }
       }
-      endpoints: {
-        value: {
-          step01: endpoints.step01
-          step02: endpoints.step02
-          step03: endpoints.step03
-          step04: endpoints.step04
-          step05: endpoints.step05
-          step06: endpoints.step06
-          step07: endpoints.step07
-          step08: endpoints.step08
-          step09: endpoints.step09
-        }
-      }
     }
     definition: {
       '$schema': 'https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#'
@@ -96,9 +83,41 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           type: 'object'
           defaultValue: {}
         }
-        endpoints: {
-          type: 'object'
-          defaultValue: {}
+        step01Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step01
+        }
+        step02Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step02
+        }
+        step03Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step03
+        }
+        step04Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step04
+        }
+        step05Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step05
+        }
+        step06Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step06
+        }
+        step07Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step07
+        }
+        step08Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step08
+        }
+        step09Endpoint: {
+          type: 'string'
+          defaultValue: endpoints.step09
         }
       }
       triggers: {
@@ -142,7 +161,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           inputs: {
             subscribe: {
               method: 'POST'
-              uri: '@parameters(\'endpoints\')[\'step01\']'
+              uri: '@parameters(\'step01Endpoint\')'
               body: {
                 boughtSlicedGaraetteok: '@triggerBody()?[\'boughtSlicedGaraetteok\']'
                 timeToSoakInMinutes: '@triggerBody()?[\'timeToSoakInMinutes\']'
@@ -158,7 +177,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           inputs: {
             subscribe: {
               method: 'POST'
-              uri: '@parameters(\'endpoints\')[\'step02\']'
+              uri: '@parameters(\'step02Endpoint\')'
               body: {
                 timeToSliceInMinutes: '@triggerBody()?[\'timeToSliceInMinutes\']'
                 callbackUrl: '@listCallbackUrl()'
@@ -173,7 +192,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           inputs: {
             subscribe: {
               method: 'POST'
-              uri: '@parameters(\'endpoints\')[\'step03\']'
+              uri: '@parameters(\'step03Endpoint\')'
               body: {
                 timeToStirFryInMinutes: '@triggerBody()?[\'timeToStirFryInMinutes\']'
                 callbackUrl: '@listCallbackUrl()'
@@ -188,7 +207,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           inputs: {
             subscribe: {
               method: 'POST'
-              uri: '@parameters(\'endpoints\')[\'step06\']'
+              uri: '@parameters(\'step06Endpoint\')'
               body: {
                 callbackUrl: '@listCallbackUrl()'
               }
@@ -229,7 +248,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           inputs: {
             subscribe: {
               method: 'POST'
-              uri: '@parameters(\'endpoints\')[\'step04\']'
+              uri: '@parameters(\'step04Endpoint\')'
               body: {
                 timeToBoilInMinutes: '@triggerBody()?[\'timeToBoilInMinutes\']'
                 callbackUrl: '@listCallbackUrl()'
@@ -284,7 +303,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
               }
               inputs: {
                 method: 'POST'
-                uri: '@parameters(\'endpoints\')[\'step05\']'
+                uri: '@parameters(\'step05Endpoint\')'
                 body: '@outputs(\'BubbleAppeared\')'
               }
             }
@@ -315,7 +334,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           inputs: {
             subscribe: {
               method: 'POST'
-              uri: '@parameters(\'endpoints\')[\'step07\']'
+              uri: '@parameters(\'step07Endpoint\')'
               body: {
                 callbackUrl: '@listCallbackUrl()'
               }
@@ -333,7 +352,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           inputs: {
             subscribe: {
               method: 'POST'
-              uri: '@parameters(\'endpoints\')[\'step08\']'
+              uri: '@parameters(\'step08Endpoint\')'
               body: {
                 callbackUrl: '@listCallbackUrl()'
               }
@@ -350,7 +369,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
           }
           inputs: {
             method: 'POST'
-            uri: '@parameters(\'endpoints\')[\'step09\']'
+            uri: '@parameters(\'step09Endpoint\')'
             body: {
               pepper: '@triggerBody()?[\'pepper\']'
             }
