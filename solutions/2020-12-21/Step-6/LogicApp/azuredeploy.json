@@ -1,0 +1,60 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Http_Webhook": {
+                "inputs": {
+                    "subscribe": {
+                        "body": {
+                            "callbackUrl": "@listCallbackUrl()"
+                        },
+                        "method": "POST",
+                        "uri": "@{concat('https://', parameters('youjinjs'), '.azurewebsites.net/api/orchestrators/isboiled_orchestrator')}"
+                    },
+                    "unsubscribe": {}
+                },
+                "runAfter": {},
+                "type": "HttpWebhook"
+            },
+            "응답": {
+                "inputs": {
+                    "body": "@body('Http_Webhook')",
+                    "statusCode": 200
+                },
+                "kind": "Http",
+                "runAfter": {
+                    "Http_Webhook": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Response"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "youjinjs": {
+                "defaultValue": "youjinjs",
+                "type": "String"
+            }
+        },
+        "triggers": {
+            "manual": {
+                "inputs": {
+                    "method": "POST",
+                    "schema": {
+                        "properties": {
+                            "timeToBoilInMinutes": {
+                                "type": "integer"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "kind": "Http",
+                "type": "Request"
+            }
+        }
+    },
+    "parameters": {}
+}
