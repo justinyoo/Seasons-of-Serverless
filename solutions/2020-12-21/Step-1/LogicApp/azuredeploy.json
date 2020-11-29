@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workflows_webhook_name": {
+      "defaultValue": "webhook",
+      "type": "String"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[parameters('workflows_webhook_name')]",
+      "location": "eastus2",
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "azfunc": {
+              "defaultValue": {},
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "method": "POST",
+                "schema": {
+                  "properties": {
+                    "boughtSlicedGaraetteok": {
+                      "type": "boolean"
+                    },
+                    "timeToSoakInMinutes": {
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "actions": {
+            "HTTP_Webhook": {
+              "runAfter": {},
+              "type": "HttpWebhook",
+              "inputs": {
+                "subscribe": {
+                  "body": {
+                    "boughtSlicedGaraetteok": "@triggerBody()?['boughtSlicedGaraetteok']",
+                    "callbackUrl": "@listCallbackUrl()",
+                    "timeToSoakInMinutes": "@triggerBody()?['timeToSoakInMinutes']"
+                  },
+                  "method": "POST",
+                  "uri": "https://seasonsofserverless2.azurewebsites.net/api/orchestrators/SoakSliceFunctionsOrchestrator"
+                },
+                "unsubscribe": {}
+              }
+            },
+            "Response": {
+              "runAfter": {
+                "HTTP_Webhook": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Response",
+              "kind": "Http",
+              "inputs": {
+                "body": "@body('HTTP_Webhook')",
+                "statusCode": 200
+              },
+              "operationOptions": "Asynchronous"
+            }
+          }
+        },
+        "parameters": {}
+      }
+    }
+  ]
+}
