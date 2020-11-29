@@ -15,6 +15,7 @@ const moment = require("moment");
 module.exports = df.orchestrator(function*(context) {
     const whisk_waiting = 60;
     const wait_times = moment.utc(context.df.currentUtcDateTime).add(whisk_waiting, 's');
+    const outputs = [];
 
     context.df.setCustomStatus('{"completed" : false}');
     yield context.df.createTimer(wait_times.toDate());
