@@ -1,0 +1,416 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "locationCode": {
+      "type": "string",
+      "defaultValue": "krc"
+    },
+    "step01Endpoint": {
+      "type": "string"
+    },
+    "step02Endpoint": {
+      "type": "string"
+    },
+    "step03Endpoint": {
+      "type": "string"
+    },
+    "step04Endpoint": {
+      "type": "string"
+    },
+    "step05Endpoint": {
+      "type": "string"
+    },
+    "step06Endpoint": {
+      "type": "string"
+    },
+    "step07Endpoint": {
+      "type": "string"
+    },
+    "step08Endpoint": {
+      "type": "string"
+    },
+    "step09Endpoint": {
+      "type": "string"
+    }
+  },
+  "functions": [],
+  "variables": {
+    "metadata": {
+      "longName": "[format('{{0}}-{0}-{{1}}-{1}', parameters('name'), parameters('locationCode'))]",
+      "shortName": "[format('{{0}}{0}{1}', parameters('name'), parameters('locationCode'))]"
+    },
+    "connection": {
+      "name": "[replace(variables('metadata').longName, '{0}', 'apicon')]",
+      "location": "[parameters('location')]",
+      "connectionId": "[format('{0}/providers/Microsoft.Web/connections/{1}', resourceGroup().id, replace(variables('metadata').longName, '{0}', 'apicon'))]",
+      "id": "[format('{0}/providers/Microsoft.Web/locations/{1}/managedApis/office365', subscription().id, parameters('location'))]"
+    },
+    "logicApp": {
+      "name": "[replace(variables('metadata').longName, '{0}', 'logapp')]",
+      "location": "[parameters('location')]"
+    },
+    "endpoints": {
+      "step01": "[parameters('step01Endpoint')]",
+      "step02": "[parameters('step02Endpoint')]",
+      "step03": "[parameters('step03Endpoint')]",
+      "step04": "[parameters('step04Endpoint')]",
+      "step05": "[parameters('step05Endpoint')]",
+      "step06": "[parameters('step06Endpoint')]",
+      "step07": "[parameters('step07Endpoint')]",
+      "step08": "[parameters('step08Endpoint')]",
+      "step09": "[parameters('step09Endpoint')]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[replace(variables('connection').name, '{1}', 'office365')]",
+      "location": "[variables('connection').location]",
+      "kind": "V1",
+      "properties": {
+        "displayName": "[replace(variables('connection').name, '{1}', 'office365')]",
+        "api": {
+          "id": "[variables('connection').id]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2019-05-01",
+      "name": "[replace(variables('logicApp').name, '{1}', 'recipe')]",
+      "location": "[variables('logicApp').location]",
+      "properties": {
+        "state": "Enabled",
+        "parameters": {
+          "$connections": {
+            "value": {
+              "office365": {
+                "connectionId": "[replace(variables('connection').connectionId, '{1}', 'office365')]",
+                "connectionName": "[replace(variables('connection').name, '{1}', 'office365')]",
+                "id": "[variables('connection').id]"
+              }
+            }
+          },
+          "endpoints": {
+            "value": {
+              "step01": "[variables('endpoints').step01]",
+              "step02": "[variables('endpoints').step02]",
+              "step03": "[variables('endpoints').step03]",
+              "step04": "[variables('endpoints').step04]",
+              "step05": "[variables('endpoints').step05]",
+              "step06": "[variables('endpoints').step06]",
+              "step07": "[variables('endpoints').step07]",
+              "step08": "[variables('endpoints').step08]",
+              "step09": "[variables('endpoints').step09]"
+            }
+          }
+        },
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "endpoints": {
+              "type": "object",
+              "defaultValue": {}
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "boughtSlicedGaraetteok": {
+                      "type": "boolean"
+                    },
+                    "timeToSoakInMinutes": {
+                      "type": "integer"
+                    },
+                    "timeToSliceInMinutes": {
+                      "type": "integer"
+                    },
+                    "timeToStirFryInMinutes": {
+                      "type": "integer"
+                    },
+                    "timeToBoilInMinutes": {
+                      "type": "integer"
+                    },
+                    "pepper": {
+                      "type": "boolean"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "actions": {
+            "HTTP_Webhook_Step_1": {
+              "type": "HttpWebhook",
+              "runAfter": {},
+              "inputs": {
+                "subscribe": {
+                  "method": "POST",
+                  "uri": "@parameters('endpoints')['step01']",
+                  "body": {
+                    "boughtSlicedGaraetteok": "@triggerBody()?['boughtSlicedGaraetteok']",
+                    "timeToSoakInMinutes": "@triggerBody()?['timeToSoakInMinutes']",
+                    "callbackUrl": "@listCallbackUrl()"
+                  }
+                },
+                "unsubscribe": {}
+              }
+            },
+            "HTTP_Webhook_Step_2": {
+              "type": "HttpWebhook",
+              "runAfter": {},
+              "inputs": {
+                "subscribe": {
+                  "method": "POST",
+                  "uri": "@parameters('endpoints')['step02']",
+                  "body": {
+                    "timeToSliceInMinutes": "@triggerBody()?['timeToSliceInMinutes']",
+                    "callbackUrl": "@listCallbackUrl()"
+                  }
+                },
+                "unsubscribe": {}
+              }
+            },
+            "HTTP_Webhook_Step_3": {
+              "type": "HttpWebhook",
+              "runAfter": {},
+              "inputs": {
+                "subscribe": {
+                  "method": "POST",
+                  "uri": "@parameters('endpoints')['step03']",
+                  "body": {
+                    "timeToStirFryInMinutes": "@triggerBody()?['timeToStirFryInMinutes']",
+                    "callbackUrl": "@listCallbackUrl()"
+                  }
+                },
+                "unsubscribe": {}
+              }
+            },
+            "HTTP_Webhook_Step_6": {
+              "type": "HttpWebhook",
+              "runAfter": {},
+              "inputs": {
+                "subscribe": {
+                  "method": "POST",
+                  "uri": "@parameters('endpoints')['step06']",
+                  "body": {
+                    "callbackUrl": "@listCallbackUrl()"
+                  }
+                },
+                "unsubscribe": {}
+              }
+            },
+            "Check_Steps": {
+              "type": "Compose",
+              "runAfter": {
+                "HTTP_Webhook_Step_1": [
+                  "Succeeded"
+                ],
+                "HTTP_Webhook_Step_2": [
+                  "Succeeded"
+                ],
+                "HTTP_Webhook_Step_3": [
+                  "Succeeded"
+                ],
+                "HTTP_Webhook_Step_6": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "step1Completed": "@body('HTTP_Webhook_Step_1')?['completed']",
+                "step2Completed": "@body('HTTP_Webhook_Step_2')?['completed']",
+                "step3Completed": "@body('HTTP_Webhook_Step_3')?['completed']",
+                "step6Completed": "@body('HTTP_Webhook_Step_6')?['completed']"
+              }
+            },
+            "HTTP_Webhook_Step_4": {
+              "type": "HttpWebhook",
+              "runAfter": {
+                "Check_Steps": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "subscribe": {
+                  "method": "POST",
+                  "uri": "@parameters('endpoints')['step04']",
+                  "body": {
+                    "timeToBoilInMinutes": "@triggerBody()?['timeToBoilInMinutes']",
+                    "callbackUrl": "@listCallbackUrl()"
+                  }
+                },
+                "unsubscribe": {}
+              }
+            },
+            "Is_Bubble_Removed": {
+              "type": "InitializeVariable",
+              "runAfter": {
+                "Check_Steps": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "variables": [
+                  {
+                    "type": "boolean",
+                    "name": "BubbleRemoved",
+                    "value": false
+                  }
+                ]
+              }
+            },
+            "Until": {
+              "type": "Until",
+              "runAfter": {
+                "Is_Bubble_Removed": [
+                  "Succeeded"
+                ]
+              },
+              "expression": "@equals(variables('BubbleRemoved'), true)",
+              "limit": {
+                "count": 60,
+                "timeout": "PT1H"
+              },
+              "actions": {
+                "BubbleAppeared": {
+                  "type": "Compose",
+                  "runAfter": {},
+                  "inputs": {
+                    "bubbleAppeared": "@if(greater(rand(0, 11), 5), true, false)"
+                  }
+                },
+                "HTTP_Step_5": {
+                  "type": "Http",
+                  "runAfter": {
+                    "BubbleAppeared": [
+                      "Succeeded"
+                    ]
+                  },
+                  "inputs": {
+                    "method": "POST",
+                    "uri": "@parameters('endpoints')['step05']",
+                    "body": "@outputs('BubbleAppeared')"
+                  }
+                },
+                "Set_variable": {
+                  "type": "SetVariable",
+                  "runAfter": {
+                    "HTTP_Step_5": [
+                      "Succeeded"
+                    ]
+                  },
+                  "inputs": {
+                    "name": "BubbleRemoved",
+                    "value": "@body('HTTP_Step_5')?['removed']"
+                  }
+                }
+              }
+            },
+            "HTTP_Webhook_Step_7": {
+              "type": "HttpWebhook",
+              "runAfter": {
+                "HTTP_Webhook_Step_4": [
+                  "Succeeded"
+                ],
+                "Until": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "subscribe": {
+                  "method": "POST",
+                  "uri": "@parameters('endpoints')['step07']",
+                  "body": {
+                    "callbackUrl": "@listCallbackUrl()"
+                  }
+                },
+                "unsubscribe": {}
+              }
+            },
+            "HTTP_Webhook_Step_8": {
+              "type": "HttpWebhook",
+              "runAfter": {
+                "HTTP_Webhook_Step_7": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "subscribe": {
+                  "method": "POST",
+                  "uri": "@parameters('endpoints')['step08']",
+                  "body": {
+                    "callbackUrl": "@listCallbackUrl()"
+                  }
+                },
+                "unsubscribe": {}
+              }
+            },
+            "HTTP_Step_9": {
+              "type": "Http",
+              "runAfter": {
+                "HTTP_Webhook_Step_8": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "method": "POST",
+                "uri": "@parameters('endpoints')['step09']",
+                "body": {
+                  "pepper": "@triggerBody()?['pepper']"
+                }
+              }
+            },
+            "Send_an_email": {
+              "type": "ApiConnection",
+              "runAfter": {
+                "HTTP_Step_9": [
+                  "Succeeded"
+                ]
+              },
+              "inputs": {
+                "method": "POST",
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['office365']['connectionId']"
+                  }
+                },
+                "path": "/v2/Mail",
+                "body": {
+                  "To": "@triggerBody()?['email']",
+                  "Subject": "Your Tteokguk Is Ready!",
+                  "Body": "<p><img src=\"@{body('HTTP_Step_9')?['tteokgukImageUrl']}\"></p>"
+                }
+              }
+            }
+          },
+          "outputs": {}
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/connections', replace(variables('connection').name, '{1}', 'office365'))]"
+      ]
+    }
+  ]
+}
