@@ -54,7 +54,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=1 functionAppWorkerRuntime=python
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=1 functionAppWorkerRuntime=python
 
     - name: Deploy ARM templates Step 2
       uses: Azure/arm-deploy@v1.0.1
@@ -63,7 +63,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=2 functionAppWorkerRuntime=dotnet
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=2 functionAppWorkerRuntime=dotnet
 
     - name: Deploy ARM templates Step 3
       uses: Azure/arm-deploy@v1.0.1
@@ -72,7 +72,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=3 functionAppWorkerRuntime=python
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=3 functionAppWorkerRuntime=python
 
     - name: Deploy ARM templates Step 4
       uses: Azure/arm-deploy@v1.0.1
@@ -81,7 +81,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=4 functionAppWorkerRuntime=node
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=4 functionAppWorkerRuntime=node
 
     - name: Deploy ARM templates Step 5
       uses: Azure/arm-deploy@v1.0.1
@@ -90,7 +90,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=5 functionAppWorkerRuntime=dotnet
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=5 functionAppWorkerRuntime=dotnet
 
     - name: Deploy ARM templates Step 6
       uses: Azure/arm-deploy@v1.0.1
@@ -99,7 +99,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=6 functionAppWorkerRuntime=node
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=6 functionAppWorkerRuntime=node
 
     - name: Deploy ARM templates Step 7
       uses: Azure/arm-deploy@v1.0.1
@@ -108,7 +108,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=7 functionAppWorkerRuntime=dotnet
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=7 functionAppWorkerRuntime=dotnet
 
     - name: Deploy ARM templates Step 8
       uses: Azure/arm-deploy@v1.0.1
@@ -117,7 +117,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=8 functionAppWorkerRuntime=node
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=8 functionAppWorkerRuntime=node
 
     - name: Deploy ARM templates Step 9
       uses: Azure/arm-deploy@v1.0.1
@@ -126,7 +126,7 @@ jobs:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
-        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone=${{ secrets.TIMEZONE }} index=9 functionAppWorkerRuntime=python
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=9 functionAppWorkerRuntime=python
 
   functionapp_build_test_deploy_1:
     name: 'FunctionApp Step 1 Deploy'
