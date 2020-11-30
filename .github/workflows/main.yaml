@@ -1,0 +1,738 @@
+name: Build, Test & Deploy
+
+on:
+  push:
+    branches:
+    - main
+    - solution
+
+env:
+  DOTNET_VERSION: '3.1.x'
+  NODE_VERSION: '12.x'
+  PYTHON_VERSION: '3.8'
+
+jobs:
+  arm_template_build_test_deploy:
+    name: 'ARM Templates Build, Test & Deploy'
+
+    runs-on: ubuntu-latest
+
+    env:
+      RESOURCE_PATH: 'solutions/2020-12-21/Resources'
+      DEPLOYMENT_NAME: 'sos'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Run Bicep build
+      uses: aliencube/bicep-build-actions@v0.1
+      with:
+        files: '**/*.bicep'
+
+    - name: Run ARM TTK
+      uses: aliencube/arm-ttk-actions@v0.3
+      id: armtest
+      with:
+        path: ./${{ env.RESOURCE_PATH }}
+
+    - name: Show ARM TTK test result
+      shell: bash
+      continue-on-error: true
+      run: |
+        echo 'Results: ${{ toJSON(fromJSON(steps.armtest.outputs.results)) }}'
+
+    - name: Deploy ARM templates Step 1
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=1 functionAppWorkerRuntime=python
+
+    - name: Deploy ARM templates Step 2
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=2 functionAppWorkerRuntime=dotnet
+
+    - name: Deploy ARM templates Step 3
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=3 functionAppWorkerRuntime=python
+
+    - name: Deploy ARM templates Step 4
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=4 functionAppWorkerRuntime=node
+
+    - name: Deploy ARM templates Step 5
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=5 functionAppWorkerRuntime=dotnet
+
+    - name: Deploy ARM templates Step 6
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=6 functionAppWorkerRuntime=node
+
+    - name: Deploy ARM templates Step 7
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=7 functionAppWorkerRuntime=dotnet
+
+    - name: Deploy ARM templates Step 8
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=8 functionAppWorkerRuntime=node
+
+    - name: Deploy ARM templates Step 9
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.RESOURCE_PATH }}/azuredeploy.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} functionAppTimezone="${{ secrets.TIMEZONE }}" index=9 functionAppWorkerRuntime=python
+
+  functionapp_build_test_deploy_1:
+    name: 'FunctionApp Step 1 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '1') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-1'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Python SDK
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Resolve Project Dependencies Using PIP
+      shell: bash
+      run: |
+        pushd './${{ env.FUNCTIONAPP_PATH }}'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        popd
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  functionapp_build_test_deploy_2:
+    name: 'FunctionApp Step 2 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '2') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-2'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore ${{ env.FUNCTIONAPP_PATH }}
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build ${{ env.FUNCTIONAPP_PATH }} -c Release
+
+    - name: Create FunctionApp artifact
+      shell: bash
+      run: |
+        dotnet publish ${{ env.FUNCTIONAPP_PATH }} -c Release -o ${{ env.FUNCTIONAPP_PATH }}/published
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}/published
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  functionapp_build_test_deploy_3:
+    name: 'FunctionApp Step 3 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '3') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-3'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Python SDK
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Resolve Project Dependencies Using PIP
+      shell: bash
+      run: |
+        pushd './${{ env.FUNCTIONAPP_PATH }}'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        popd
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  functionapp_build_test_deploy_4:
+    name: 'FunctionApp Step 4 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '4') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-4'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Node ${{ env.NODE_VERSION }} SDK
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Resolve Project Dependencies Using NPM
+      shell: bash
+      run: |
+        pushd './${{ env.FUNCTIONAPP_PATH }}'
+        npm install
+        npm run build --if-present
+        npm run test --if-present
+        popd
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  functionapp_build_test_deploy_5:
+    name: 'FunctionApp Step 5 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '5') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-5'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore ${{ env.FUNCTIONAPP_PATH }}
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build ${{ env.FUNCTIONAPP_PATH }} -c Release
+
+    - name: Create FunctionApp artifact
+      shell: bash
+      run: |
+        dotnet publish ${{ env.FUNCTIONAPP_PATH }} -c Release -o ${{ env.FUNCTIONAPP_PATH }}/published
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}/published
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  functionapp_build_test_deploy_6:
+    name: 'FunctionApp Step 6 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '6') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-6'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Node ${{ env.NODE_VERSION }} SDK
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Resolve Project Dependencies Using NPM
+      shell: bash
+      run: |
+        pushd './${{ env.FUNCTIONAPP_PATH }}'
+        npm install
+        npm run build --if-present
+        npm run test --if-present
+        popd
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  functionapp_build_test_deploy_7:
+    name: 'FunctionApp Step 7 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '7') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-7'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore NuGet packages
+      shell: bash
+      run: |
+        dotnet restore ${{ env.FUNCTIONAPP_PATH }}
+
+    - name: Build solution
+      shell: bash
+      run: |
+        dotnet build ${{ env.FUNCTIONAPP_PATH }} -c Release
+
+    - name: Create FunctionApp artifact
+      shell: bash
+      run: |
+        dotnet publish ${{ env.FUNCTIONAPP_PATH }} -c Release -o ${{ env.FUNCTIONAPP_PATH }}/published
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}/published
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  functionapp_build_test_deploy_8:
+    name: 'FunctionApp Step 8 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '8') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-8'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Node ${{ env.NODE_VERSION }} SDK
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Resolve Project Dependencies Using NPM
+      shell: bash
+      run: |
+        pushd './${{ env.FUNCTIONAPP_PATH }}'
+        npm install
+        npm run build --if-present
+        npm run test --if-present
+        popd
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  functionapp_build_test_deploy_9:
+    name: 'FunctionApp Step 9 Deploy'
+    needs:
+    - arm_template_build_test_deploy
+
+    runs-on: ubuntu-latest
+
+    env:
+      FUNCTIONAPP_NAME: ${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '9') }}
+      FUNCTIONAPP_PATH: 'solutions/2020-12-21/Step-9'
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Python SDK
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Resolve Project Dependencies Using PIP
+      shell: bash
+      run: |
+        pushd './${{ env.FUNCTIONAPP_PATH }}'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        popd
+
+    - name: Get FunctionApp publish profile
+      id: publishprofile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+
+    - name: Deploy FunctionApp
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTIONAPP_NAME }}
+        package: ${{ env.FUNCTIONAPP_PATH }}
+        publish-profile: ${{ steps.publishprofile.outputs.profile }}
+
+    - name: Reset FunctionApp publish profile
+      uses: aliencube/publish-profile-actions@v1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      with:
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        appName: ${{ env.FUNCTIONAPP_NAME }}
+        reset: true
+
+  logicapp_build_test_deploy:
+    name: 'LogicApp Deploy'
+    needs:
+    - functionapp_build_test_deploy_1
+    - functionapp_build_test_deploy_2
+    - functionapp_build_test_deploy_3
+    - functionapp_build_test_deploy_4
+    - functionapp_build_test_deploy_5
+    - functionapp_build_test_deploy_6
+    - functionapp_build_test_deploy_7
+    - functionapp_build_test_deploy_8
+    - functionapp_build_test_deploy_9
+
+    runs-on: ubuntu-latest
+
+    env:
+      LOGICAPP_PATH: 'solutions/2020-12-21/Resources'
+      DEPLOYMENT_NAME: logapp
+      STEP_1_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '1') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '1') }}
+      STEP_2_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '2') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '2') }}
+      STEP_3_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '3') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '3') }}
+      STEP_4_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '4') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '4') }}
+      STEP_5_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '5') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '5') }}
+      STEP_6_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '6') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '6') }}
+      STEP_7_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '7') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '7') }}
+      STEP_8_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '8') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '8') }}
+      STEP_9_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '9') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '9') }}
+
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Run Bicep build
+      uses: aliencube/bicep-build-actions@v0.1
+      with:
+        files: '**/*.bicep'
+
+    - name: Run ARM TTK
+      uses: aliencube/arm-ttk-actions@v0.3
+      id: armtest
+      with:
+        path: ./${{ env.LOGICAPP_PATH }}
+
+    - name: Show ARM TTK test result
+      shell: bash
+      continue-on-error: true
+      run: |
+        echo 'Results: ${{ toJSON(fromJSON(steps.armtest.outputs.results)) }}'
+
+    - name: Deploy Logic App
+      uses: Azure/arm-deploy@v1.0.1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+        deploymentName: ${{ env.DEPLOYMENT_NAME }}
+        template: '${{ env.LOGICAPP_PATH }}/logicapp.json'
+        parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} step01Endpoint=${{ env.STEP_1_ENDPOINT }} step02Endpoint=${{ env.STEP_2_ENDPOINT }} step03Endpoint=${{ env.STEP_3_ENDPOINT }} step04Endpoint=${{ env.STEP_4_ENDPOINT }} step05Endpoint=${{ env.STEP_5_ENDPOINT }} step06Endpoint=${{ env.STEP_6_ENDPOINT }} step07Endpoint=${{ env.STEP_7_ENDPOINT }} step08Endpoint=${{ env.STEP_8_ENDPOINT }} step09Endpoint=${{ env.STEP_9_ENDPOINT }}

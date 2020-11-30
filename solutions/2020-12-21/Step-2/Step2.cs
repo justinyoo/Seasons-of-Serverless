@@ -49,7 +49,7 @@ namespace Seasons_of_Serverless_Step2
             }
 
             RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
-            //test¿ë
+            //testï¿½ï¿½
             //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
 
             retryPolicy.Handle = (ex) =>
@@ -85,7 +85,11 @@ namespace Seasons_of_Serverless_Step2
                 var payload = new Step2_ResponseData() { Completed = true };
                 var formatter = new JsonMediaTypeFormatter();
 
+<<<<<<< HEAD
                 var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);
+=======
+                var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);      
+>>>>>>> 08f987ddd0ae88a08f6e796edc0772d7e9ea694f
             }
 
             return randomBool;

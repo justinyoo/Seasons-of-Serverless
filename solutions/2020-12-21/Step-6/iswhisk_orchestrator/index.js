@@ -13,13 +13,14 @@ const df = require("durable-functions");
 const moment = require("moment");
 
 module.exports = df.orchestrator(function*(context) {
+    const input = context.df.getInput();
     const whisk_waiting = 60;
     const wait_times = moment.utc(context.df.currentUtcDateTime).add(whisk_waiting, 's');
     const outputs = [];
 
     context.df.setCustomStatus('{"completed" : false}');
     yield context.df.createTimer(wait_times.toDate());
-    outputs.push(yield context.df.callActivity("whiskstatus", "completed"));
+    outputs.push(yield context.df.callActivity("whiskstatus", input.callbackUrl));
     context.df.setCustomStatus(outputs);
     return outputs;
 });
