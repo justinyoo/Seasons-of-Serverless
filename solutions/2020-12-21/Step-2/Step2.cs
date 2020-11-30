@@ -18,7 +18,7 @@ namespace Seasons_of_Serverless_Step2
     {
         private static HttpClient httpClient = new HttpClient();
 
-        [FunctionName("Step2_HttpStart")]
+        [FunctionName("Step2")]
         public static async Task<IActionResult> HttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
             [DurableClient] IDurableOrchestrationClient starter,
@@ -27,7 +27,7 @@ namespace Seasons_of_Serverless_Step2
             // Function input comes from the request content.
             var requestData = await req.Content.ReadAsAsync<Step2_RequestData>();
 
-            var instanceId = starter.StartNewAsync("Step2", requestData).Result;
+            var instanceId = starter.StartNewAsync("Step2_Orchestrator", requestData).Result;
 
             log.LogWarning($"Started orchestration with ID = '{instanceId}'.");
 
@@ -36,7 +36,7 @@ namespace Seasons_of_Serverless_Step2
             return new OkObjectResult(orchestratorId);
         }
 
-        [FunctionName("Step2")]
+        [FunctionName("Step2_Orchestrator")]
         public static async Task<bool> RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
             var step2_RequestData = context.GetInput<Step2_RequestData>();
@@ -85,7 +85,7 @@ namespace Seasons_of_Serverless_Step2
                 var payload = new Step2_ResponseData() { Completed = true };
                 var formatter = new JsonMediaTypeFormatter();
 
-                var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);      
+                var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);
             }
 
             return randomBool;

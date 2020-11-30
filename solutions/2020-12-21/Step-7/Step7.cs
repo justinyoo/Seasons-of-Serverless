@@ -17,7 +17,7 @@ namespace Seasons_of_Serverless_Step7
     {
         private static HttpClient httpClient = new HttpClient();
 
-        [FunctionName("Step7_HttpStart")]
+        [FunctionName("Step7")]
         public static async Task<IActionResult> HttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
             [DurableClient] IDurableOrchestrationClient starter,
@@ -25,7 +25,7 @@ namespace Seasons_of_Serverless_Step7
         {
             var requestData = await req.Content.ReadAsAsync<Step7_RequestData>();
 
-            var instanceId = starter.StartNewAsync("Step7", requestData).Result;
+            var instanceId = starter.StartNewAsync("Step7_Orchestrator", requestData).Result;
 
             log.LogWarning($"Started orchestration with ID = '{instanceId}'.");
 
@@ -34,7 +34,7 @@ namespace Seasons_of_Serverless_Step7
             return new OkObjectResult(orchestratorId);
         }
 
-        [FunctionName("Step7")]
+        [FunctionName("Step7_Orchestrator")]
         public static async Task<bool> RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
             var step7_RequestData = context.GetInput<Step7_RequestData>();
