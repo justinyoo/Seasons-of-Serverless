@@ -9,7 +9,7 @@ on:
 env:
   DOTNET_VERSION: '3.1.x'
   NODE_VERSION: '12.x'
-  PYTHON_VERSION: '3.8'
+  PYTHON_VERSION: '3.6'
 
 jobs:
   arm_template_build_test_deploy:
