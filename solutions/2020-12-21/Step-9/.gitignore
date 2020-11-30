@@ -6,13 +6,6 @@ __pycache__/
 # C extensions
 *.so
 
-## Azure functions
-
-.venv/
-__azurite_db_*
-__blobstorage__
-__queuestorage__
-
 # Distribution / packaging
 .Python
 build/

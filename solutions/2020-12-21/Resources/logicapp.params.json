@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "name": {
+        "value": "sos"
+      },
+      "step01Endpoint": {
+        "value": "https://func01.azurewebsites.net/api/endpoint"
+      },
+      "step02Endpoint": {
+        "value": "https://func02.azurewebsites.net/api/endpoint"
+      },
+      "step03Endpoint": {
+        "value": "https://func03.azurewebsites.net/api/endpoint"
+      },
+      "step04Endpoint": {
+        "value": "https://func04.azurewebsites.net/api/endpoint"
+      },
+      "step05Endpoint": {
+        "value": "https://func05.azurewebsites.net/api/endpoint"
+      },
+      "step06Endpoint": {
+        "value": "https://func06.azurewebsites.net/api/endpoint"
+      },
+      "step07Endpoint": {
+        "value": "https://func07.azurewebsites.net/api/endpoint"
+      },
+      "step08Endpoint": {
+        "value": "https://func08.azurewebsites.net/api/endpoint"
+      },
+      "step09Endpoint": {
+        "value": "https://func09.azurewebsites.net/api/endpoint"
+      }
+    }
+  }
+  

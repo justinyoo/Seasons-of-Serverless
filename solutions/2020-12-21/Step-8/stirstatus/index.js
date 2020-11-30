@@ -12,6 +12,7 @@
 const request = require("request-promise-native");
 
 module.exports = async function (context, callbackUrl) {
+
    
     var result = Math.random() <= 1;
 
