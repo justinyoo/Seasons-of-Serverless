@@ -9,6 +9,38 @@
  *   function app in Kudu
  */
 
-module.exports = async function (context) {
-    return `{"${context.bindings.name}": ${Math.random() <= 1}}`;
-};
+const request = require("request-promise-native");
+
+module.exports = async function (context, callbackUrl) {
+
+    try {
+        const data = await getCurrentConditions(callbackUrl);
+    } catch (err) {
+        context.log(`an error: ${err}`);
+        throw new Error(err);
+    }
+
+    return `{"completed": ${result}}`;
+}
+
+async function getCurrentConditions(callbackUrl) {
+    const options = {
+        url: `${callbackUrl}`,
+        method: 'POST',
+        json: true,
+        headers: {
+            "Accept": " application/json",
+            "Content-Type": " application/json"
+        },
+        body: `{"completed": true}`
+    };
+
+    const body = await request(options);
+    if (body.error) {
+        throw body.error;
+    } else if (body.response && body.response.error) {
+        throw body.response.error;
+    } else {
+        return body.current_observation;
+    }
+}
