@@ -9,7 +9,7 @@ on:
 env:
   DOTNET_VERSION: '3.1.x'
   NODE_VERSION: '12.x'
-  PYTHON_VERSION: '3.6'
+  PYTHON_VERSION: '3.x'
 
 jobs:
   arm_template_build_test_deploy:
@@ -149,7 +149,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Setup Python SDK
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
@@ -272,7 +272,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Setup Python SDK
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
@@ -637,7 +637,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Setup Python SDK
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
