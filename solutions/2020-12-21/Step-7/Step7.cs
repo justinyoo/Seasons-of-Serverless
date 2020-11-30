@@ -46,7 +46,7 @@ namespace Seasons_of_Serverless_Step7
                 log.LogInformation($"Start Step7_Orchestrator");
             }
             RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: 10);
-            //test��
+            //test
             //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: 10);
 
             retryPolicy.Handle = (ex) =>
