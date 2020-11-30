@@ -187,7 +187,7 @@ jobs:
         reset: true
 
   functionapp_build_test_deploy_2:
-    name: 'FunctionApp Step 1 Deploy'
+    name: 'FunctionApp Step 2 Deploy'
     needs:
     - arm_template_build_test_deploy
 
