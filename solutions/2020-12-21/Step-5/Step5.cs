@@ -17,7 +17,7 @@ namespace Seasons_of_Serverless_Step5
     {
         [FunctionName("Step5")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "step-5")] HttpRequestMessage req,
             ILogger log)
         {
             var init = new Step5_ResponseData() { Removed = false };
