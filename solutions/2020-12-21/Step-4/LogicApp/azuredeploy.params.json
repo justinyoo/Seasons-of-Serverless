@@ -1,0 +1,9 @@
+{
+  "boughtSlicedGaraetteok": true,
+  "timeToSoakInMinutes": 30,
+  "timeToSliceInMinutes": 5,
+  "timeToStirFryInMinutes": 8,
+  "timeToBoilInMinutes": 30,
+  "pepper": true,
+  "email": "<your@email.address.com>"
+}

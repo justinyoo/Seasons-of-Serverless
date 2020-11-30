@@ -12,6 +12,8 @@
 const request = require("request-promise-native");
 
 module.exports = async function (context, callbackUrl) {
+   
+    var result = Math.random() <= 1;
 
     try {
         const data = await getCurrentConditions(callbackUrl);
