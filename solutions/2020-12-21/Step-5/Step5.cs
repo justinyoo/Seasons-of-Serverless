@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Http.Formatting;
 using System.Net.Http;
+using System.Text;
 
 namespace Seasons_of_Serverless_Step5
 {
@@ -19,14 +20,16 @@ namespace Seasons_of_Serverless_Step5
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
             ILogger log)
         {
-            var payload = new Step5_ResponseData() { Removed = false };
+            var init = new Step5_ResponseData() { Removed = false };
 
             var requestData = await req.Content.ReadAsAsync<Step5_RequestData>();
 
             if(requestData.BubbleAppeared)
             {
-                payload.Removed = true;
+                init.Removed = true;
             }
+
+            var payload = JsonConvert.SerializeObject(init);
 
             return new OkObjectResult(payload);
         }
