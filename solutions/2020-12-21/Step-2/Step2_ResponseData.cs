@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Seasons_of_Serverless_Step2
 {
-    public class SlicingGreenOnionData
+    public class Step2_ResponseData
     {
-        public bool completed { get; set; }
+        [JsonProperty("completed")]
+        public bool Completed { get; set; }
     }
 }

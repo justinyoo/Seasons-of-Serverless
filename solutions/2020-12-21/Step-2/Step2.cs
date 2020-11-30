@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using DurableTask.Core.Exceptions;
@@ -15,6 +16,8 @@ namespace Seasons_of_Serverless_Step2
 {
     public static class Step2
     {
+        private static HttpClient httpClient = new HttpClient();
+
         [FunctionName("Step2_HttpStart")]
         public static async Task<IActionResult> HttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
@@ -24,18 +27,18 @@ namespace Seasons_of_Serverless_Step2
             // Function input comes from the request content.
             var requestData = await req.Content.ReadAsAsync<Step2_RequestData>();
 
-            string instanceId = await starter.StartNewAsync("Step2", instanceId: null, requestData);
+            var instanceId = starter.StartNewAsync("Step2", requestData).Result;
 
             log.LogWarning($"Started orchestration with ID = '{instanceId}'.");
 
-            return (ActionResult) new OkObjectResult(starter.CreateHttpManagementPayload(instanceId));
+            var orchestratorId = starter.CreateHttpManagementPayload(instanceId);
+
+            return new OkObjectResult(orchestratorId);
         }
 
         [FunctionName("Step2")]
-        public static async Task<SlicingGreenOnionData> RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
+        public static async Task<bool> RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
-            SlicingGreenOnionData slicingGreenOnionData = new SlicingGreenOnionData();
-
             var step2_RequestData = context.GetInput<Step2_RequestData>();
 
             VerifyRequest(step2_RequestData);
@@ -45,34 +48,25 @@ namespace Seasons_of_Serverless_Step2
                 log.LogInformation($"Start Step2_Orchestrator with 'timeToSliceValue' during : {step2_RequestData.TimeToSliceInMinutes}minute");
             }
 
-            //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
+            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
             //test¿ë
-            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
+            //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
 
             retryPolicy.Handle = (ex) =>
             {
                 TaskFailedException failedEx = ex as TaskFailedException;
-                return (failedEx.Name != "Step2_SlicingStatus") ? false : true;
+                 return failedEx.Name == "Step2_SlicingStatus";
             };
 
-            try
-            {
-                slicingGreenOnionData.completed = await context.CallActivityWithRetryAsync<bool>("Step2_SlicingStatus", retryPolicy, null);
-            }
-            catch(FunctionFailedException ex)
-            {                
-                log.LogWarning("Step2_SlicingStatus", ex.Message);
+            var activity = await context.CallActivityWithRetryAsync<bool>("Step2_SlicingStatus", retryPolicy, step2_RequestData.CallBackUrl);
 
-                log.LogWarning($"check again in a minute.");
-            }
+            log.LogInformation($"Step2 ended");
 
-            log.LogInformation($"slicing ended");
-
-            return slicingGreenOnionData;
+            return true;
         } 
 
         [FunctionName("Step2_SlicingStatus")]
-        public static async Task<bool> SlicingStatus([ActivityTrigger] IDurableOrchestrationContext context, ILogger log)
+        public static async Task<bool> SlicingStatus([ActivityTrigger] string callBackUrl, ILogger log)
         {
             log.LogInformation($"Check SlicingStatus");
 
@@ -82,11 +76,16 @@ namespace Seasons_of_Serverless_Step2
 
             if(!randomBool)
             {
-                throw new Exception("The slicing of green onions is not over yet.");
+                throw new TaskFailedException("The slicing of green onions is not over yet.");
             }
             else
             {
                 log.LogInformation($"The slicing of green onions ended");
+
+                var payload = new Step2_ResponseData() { Completed = true };
+                var formatter = new JsonMediaTypeFormatter();
+
+                var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);      
             }
 
             return randomBool;
