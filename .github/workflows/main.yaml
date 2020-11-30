@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+    - solution
 
 env:
   DOTNET_VERSION: '3.1.x'
