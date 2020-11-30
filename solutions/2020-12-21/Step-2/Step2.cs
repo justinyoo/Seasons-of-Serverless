@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DurableTask.Core.Exceptions;
@@ -11,6 +12,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Seasons_of_Serverless_Step2
 {
@@ -48,9 +50,9 @@ namespace Seasons_of_Serverless_Step2
                 log.LogInformation($"Start Step2_Orchestrator with 'timeToSliceValue' during : {step2_RequestData.TimeToSliceInMinutes}minute");
             }
 
-            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
-            //test��
-            //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
+            //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
+            //test
+            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
 
             retryPolicy.Handle = (ex) =>
             {
@@ -82,14 +84,11 @@ namespace Seasons_of_Serverless_Step2
             {
                 log.LogInformation($"The slicing of green onions ended");
 
-                var payload = new Step2_ResponseData() { Completed = true };
-                var formatter = new JsonMediaTypeFormatter();
+                var payload = JsonConvert.SerializeObject(new Step2_ResponseData() { Completed = true });
 
-<<<<<<< HEAD
-                var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);
-=======
-                var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);      
->>>>>>> 08f987ddd0ae88a08f6e796edc0772d7e9ea694f
+                var httpContent = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(callBackUrl, httpContent); 
             }
 
             return randomBool;
