@@ -53,7 +53,7 @@
                                       "timeToStirFryInMinutes": "@triggerBody()?['timeToStirFryInMinutes']"
                                   },
                                   "method": "POST",
-                                  "uri": "[concat('https://', parameters('workflows_fry_name'), '.azurewebsites.net/api/orchestrators/FryFunctionsOrchestrator')]"
+                                  "uri": "[concat('https://', parameters('workflows_fry_name'), '.azurewebsites.net/api/step-3')]"
                               },
                               "unsubscribe": {}
                           }
