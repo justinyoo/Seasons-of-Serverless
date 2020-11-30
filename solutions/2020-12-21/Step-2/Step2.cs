@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DurableTask.Core.Exceptions;
@@ -11,6 +12,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Seasons_of_Serverless_Step2
 {
@@ -18,7 +20,7 @@ namespace Seasons_of_Serverless_Step2
     {
         private static HttpClient httpClient = new HttpClient();
 
-        [FunctionName("Step2_HttpStart")]
+        [FunctionName("Step2")]
         public static async Task<IActionResult> HttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
             [DurableClient] IDurableOrchestrationClient starter,
@@ -27,7 +29,7 @@ namespace Seasons_of_Serverless_Step2
             // Function input comes from the request content.
             var requestData = await req.Content.ReadAsAsync<Step2_RequestData>();
 
-            var instanceId = starter.StartNewAsync("Step2", requestData).Result;
+            var instanceId = starter.StartNewAsync("Step2_Orchestrator", requestData).Result;
 
             log.LogWarning($"Started orchestration with ID = '{instanceId}'.");
 
@@ -36,7 +38,7 @@ namespace Seasons_of_Serverless_Step2
             return new OkObjectResult(orchestratorId);
         }
 
-        [FunctionName("Step2")]
+        [FunctionName("Step2_Orchestrator")]
         public static async Task<bool> RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
             var step2_RequestData = context.GetInput<Step2_RequestData>();
@@ -49,7 +51,7 @@ namespace Seasons_of_Serverless_Step2
             }
 
             RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
-            //test¿ë
+            //test
             //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
 
             retryPolicy.Handle = (ex) =>
@@ -82,10 +84,11 @@ namespace Seasons_of_Serverless_Step2
             {
                 log.LogInformation($"The slicing of green onions ended");
 
-                var payload = new Step2_ResponseData() { Completed = true };
-                var formatter = new JsonMediaTypeFormatter();
+                var payload = JsonConvert.SerializeObject(new Step2_ResponseData() { Completed = true });
 
-                var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);      
+                var httpContent = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(callBackUrl, httpContent); 
             }
 
             return randomBool;

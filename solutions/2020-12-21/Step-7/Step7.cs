@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Text;
 using System.Threading.Tasks;
 using DurableTask.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Seasons_of_Serverless_Step7
 {
@@ -17,7 +19,7 @@ namespace Seasons_of_Serverless_Step7
     {
         private static HttpClient httpClient = new HttpClient();
 
-        [FunctionName("Step7_HttpStart")]
+        [FunctionName("Step7")]
         public static async Task<IActionResult> HttpStart(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
             [DurableClient] IDurableOrchestrationClient starter,
@@ -25,7 +27,7 @@ namespace Seasons_of_Serverless_Step7
         {
             var requestData = await req.Content.ReadAsAsync<Step7_RequestData>();
 
-            var instanceId = starter.StartNewAsync("Step7", requestData).Result;
+            var instanceId = starter.StartNewAsync("Step7_Orchestrator", requestData).Result;
 
             log.LogWarning($"Started orchestration with ID = '{instanceId}'.");
 
@@ -34,7 +36,7 @@ namespace Seasons_of_Serverless_Step7
             return new OkObjectResult(orchestratorId);
         }
 
-        [FunctionName("Step7")]
+        [FunctionName("Step7_Orchestrator")]
         public static async Task<bool> RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
             var step7_RequestData = context.GetInput<Step7_RequestData>();
@@ -43,10 +45,9 @@ namespace Seasons_of_Serverless_Step7
             {
                 log.LogInformation($"Start Step7_Orchestrator");
             }
-            //10회를 Max로 설정
-            //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: 10);
-            //test용
-            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: 10);
+            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: 10);
+            //test
+            //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: 10);
 
             retryPolicy.Handle = (ex) =>
             {
@@ -98,10 +99,11 @@ namespace Seasons_of_Serverless_Step7
             {
                 log.LogInformation($"Seasoning ended");
 
-                var payload = new Step7_ResponseData() { Completed = true };
-                var formatter = new JsonMediaTypeFormatter();
+                var payload = JsonConvert.SerializeObject(new Step7_ResponseData() { Completed = true });
 
-                var response = await httpClient.PostAsJsonAsync(callBackUrl, payload);
+                var httpContent = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(callBackUrl, httpContent);
             }
 
             return randomBool;
