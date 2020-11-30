@@ -692,15 +692,15 @@ jobs:
     env:
       LOGICAPP_PATH: 'solutions/2020-12-21/Resources'
       DEPLOYMENT_NAME: logapp
-      STEP_1_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '1') }}.azurewebsites.net/${{ secrets.STEP_1_ENDPOINT }}
-      STEP_2_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '2') }}.azurewebsites.net/${{ secrets.STEP_2_ENDPOINT }}
-      STEP_3_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '3') }}.azurewebsites.net/${{ secrets.STEP_3_ENDPOINT }}
-      STEP_4_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '4') }}.azurewebsites.net/${{ secrets.STEP_4_ENDPOINT }}
-      STEP_5_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '5') }}.azurewebsites.net/${{ secrets.STEP_5_ENDPOINT }}
-      STEP_6_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '6') }}.azurewebsites.net/${{ secrets.STEP_6_ENDPOINT }}
-      STEP_7_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '7') }}.azurewebsites.net/${{ secrets.STEP_7_ENDPOINT }}
-      STEP_8_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '8') }}.azurewebsites.net/${{ secrets.STEP_8_ENDPOINT }}
-      STEP_9_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '9') }}.azurewebsites.net/${{ secrets.STEP_9_ENDPOINT }}
+      STEP_1_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '1') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '1') }}
+      STEP_2_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '2') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '2') }}
+      STEP_3_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '3') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '3') }}
+      STEP_4_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '4') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '4') }}
+      STEP_5_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '5') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '5') }}
+      STEP_6_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '6') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '6') }}
+      STEP_7_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '7') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '7') }}
+      STEP_8_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '8') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '8') }}
+      STEP_9_ENDPOINT: https://${{ format(secrets.RESOURCE_FUNCTIONAPP_NAME, '9') }}.azurewebsites.net/${{ format(secrets.STEP_ENDPOINT, '9') }}
 
     steps:
     - name: Checkout the repo
