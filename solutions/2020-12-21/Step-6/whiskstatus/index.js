@@ -33,7 +33,7 @@ async function getCurrentConditions(callbackUrl) {
             // "Accept": "application/json",
             "Content-Type": "application/json"
         },
-        body: '{"completed": true}'
+        body: `{"completed": true}`
     };
 
     const body = await request(options);
