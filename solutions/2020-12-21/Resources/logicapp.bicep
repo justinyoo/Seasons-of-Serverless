@@ -235,7 +235,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
             step1Completed: '@body(\'HTTP_Webhook_Step_1\')?[\'completed\']'
             step2Completed: '@body(\'HTTP_Webhook_Step_2\')?[\'completed\']'
             step3Completed: '@body(\'HTTP_Webhook_Step_3\')?[\'completed\']'
-            step6Completed: '@body(\'HTTP_Webhook_Step_6\')?[\'completed\']'
+            step6Completed: '@json(body(\'HTTP_Webhook_Step_6\'))?[\'completed\']'
           }
         }
         HTTP_Webhook_Step_4: {
