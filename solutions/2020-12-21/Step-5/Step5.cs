@@ -29,7 +29,6 @@ namespace Seasons_of_Serverless_Step5
                 init.Removed = true;
             }
 
-            // var payload = JsonConvert.SerializeObject(init);
             var payload = init;
 
             return new OkObjectResult(payload);
