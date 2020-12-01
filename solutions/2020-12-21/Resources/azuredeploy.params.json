@@ -10,6 +10,9 @@
       },
       "functionAppWorkerRuntime": {
         "value": "dotnet"
+      },
+      "functionAppWorkerVersion": {
+        "value": "3.1"
       }
     }
   }

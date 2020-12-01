@@ -20,10 +20,11 @@ param functionAppWorkerRuntime string {
     'python'
   ]
 }
+param functionAppWorkerVersion string
 
 var metadata = {
   longName: '{0}-${name}-step-${index}-${locationCode}'
-  shortName: '{0}${name}${locationCode}'
+  shortName: '{0}${name}${index}${locationCode}'
 }
 
 var storage = {
@@ -105,6 +106,7 @@ var functionApp = {
   location: location
   timezone: functionAppTimezone
   workerRuntime: functionAppWorkerRuntime
+  workerVersion: functionAppWorkerVersion
 }
 
 resource fncapp 'Microsoft.Web/sites@2020-06-01' = {
@@ -115,6 +117,7 @@ resource fncapp 'Microsoft.Web/sites@2020-06-01' = {
     serverFarmId: csplan.id
     httpsOnly: true
     siteConfig: {
+      linuxFxVersion: '${functionApp.workerRuntime}|${functionApp.workerVersion}'
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'

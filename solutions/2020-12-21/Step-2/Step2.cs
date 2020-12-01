@@ -22,7 +22,7 @@ namespace Seasons_of_Serverless_Step2
 
         [FunctionName("Step2")]
         public static async Task<IActionResult> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "step-2")] HttpRequestMessage req,
             [DurableClient] IDurableOrchestrationClient starter,
             ILogger log)
         {

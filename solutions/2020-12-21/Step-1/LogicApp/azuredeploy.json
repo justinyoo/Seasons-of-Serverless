@@ -57,7 +57,7 @@
                     "timeToSoakInMinutes": "@triggerBody()?['timeToSoakInMinutes']"
                   },
                   "method": "POST",
-                  "uri": "https://seasonsofserverless2.azurewebsites.net/api/orchestrators/SoakSliceFunctionsOrchestrator"
+                  "uri": "https://seasonsofserverless2.azurewebsites.net/api/step-1"
                 },
                 "unsubscribe": {}
               }

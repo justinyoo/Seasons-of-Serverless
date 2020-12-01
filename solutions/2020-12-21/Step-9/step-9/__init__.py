@@ -41,4 +41,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         "tteokgukImageUrl": url + image_url
     }
 
-    return func.HttpResponse(json.dumps(return_data), status_code=200)
+    return func.HttpResponse(json.dumps(return_data), 
+        headers={"Content-Type": "application/json"}, status_code=200)

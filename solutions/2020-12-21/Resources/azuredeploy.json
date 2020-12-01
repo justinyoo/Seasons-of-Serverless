@@ -31,13 +31,16 @@
         "node",
         "python"
       ]
+    },
+    "functionAppWorkerVersion": {
+      "type": "string"
     }
   },
   "functions": [],
   "variables": {
     "metadata": {
       "longName": "[format('{{0}}-{0}-step-{1}-{2}', parameters('name'), parameters('index'), parameters('locationCode'))]",
-      "shortName": "[format('{{0}}{0}{1}', parameters('name'), parameters('locationCode'))]"
+      "shortName": "[format('{{0}}{0}{1}{2}', parameters('name'), parameters('index'), parameters('locationCode'))]"
     },
     "storage": {
       "name": "[format(variables('metadata').shortName, 'st')]",
@@ -60,7 +63,8 @@
       "name": "[replace(variables('metadata').longName, '{0}', 'fncapp')]",
       "location": "[parameters('location')]",
       "timezone": "[parameters('functionAppTimezone')]",
-      "workerRuntime": "[parameters('functionAppWorkerRuntime')]"
+      "workerRuntime": "[parameters('functionAppWorkerRuntime')]",
+      "workerVersion": "[parameters('functionAppWorkerVersion')]"
     }
   },
   "resources": [
@@ -134,6 +138,7 @@
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('servicePlan').name)]",
         "httpsOnly": true,
         "siteConfig": {
+          "linuxFxVersion": "[format('{0}|{1}', variables('functionApp').workerRuntime, variables('functionApp').workerVersion)]",
           "appSettings": [
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
