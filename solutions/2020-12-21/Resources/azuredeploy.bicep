@@ -24,7 +24,7 @@ param functionAppWorkerVersion string
 
 var metadata = {
   longName: '{0}-${name}-step-${index}-${locationCode}'
-  shortName: '{0}${name}${locationCode}'
+  shortName: '{0}${name}${index}${locationCode}'
 }
 
 var storage = {
