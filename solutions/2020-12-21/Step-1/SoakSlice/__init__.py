@@ -11,8 +11,7 @@ import azure.functions as func
 
 def main(req: func.HttpRequest) -> dict:
     bool_data = [True, False]
-    # pick_data = choice(bool_data)
-    pick_data = True
+    pick_data = choice(bool_data)
 
     if pick_data:
         # Must execute when pick_data is True
