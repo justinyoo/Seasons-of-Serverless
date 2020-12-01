@@ -29,6 +29,8 @@ def orchestrator_function(context: df.DurableOrchestrationContext):
         yield context.create_timer(delay_min)
         result = yield context.call_activity('SoakSlice', CALLBACK_URL)
 
+        is_soaked = result
+
         logging.info("Instance {} status : {}".format(context.instance_id, result))
 
     return True

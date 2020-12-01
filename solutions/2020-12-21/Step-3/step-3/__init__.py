@@ -32,6 +32,8 @@ def orchestrator_function(context: df.DurableOrchestrationContext):
         yield context.create_timer(delay_time)
         result = yield context.call_activity('Fry', CALLBACK_URL)
 
+        is_fried = result
+
         logging.info("Instance {} status : {}".format(context.instance_id, result))
 
     return True

@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "durable-functions": "^1.4.4",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9"
   },
   "devDependencies": {}
 }
