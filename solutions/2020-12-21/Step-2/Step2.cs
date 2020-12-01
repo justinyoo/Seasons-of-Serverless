@@ -53,12 +53,9 @@ namespace Seasons_of_Serverless_Step2
             RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
             //test
             //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
-
-            retryPolicy.Handle = (ex) =>
-            {
-                TaskFailedException failedEx = ex as TaskFailedException;
-                 return failedEx.Name == "Step2_SlicingStatus";
-            };
+            
+            //default value is 1.0
+            //retryPolicy.BackoffCoefficient = 1.0;
 
             var activity = await context.CallActivityWithRetryAsync<bool>("Step2_SlicingStatus", retryPolicy, step2_RequestData.CallBackUrl);
 
@@ -78,7 +75,7 @@ namespace Seasons_of_Serverless_Step2
 
             if(!randomBool)
             {
-                throw new TaskFailedException("The slicing of green onions is not over yet.");
+                throw new FunctionFailedException("The slicing of green onions is not over yet.");
             }
             else
             {

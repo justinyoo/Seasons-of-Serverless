@@ -49,12 +49,6 @@ namespace Seasons_of_Serverless_Step7
             //test
             //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: 10);
 
-            retryPolicy.Handle = (ex) =>
-            {
-                TaskFailedException failedEx = ex as TaskFailedException;
-                return failedEx.Name == "Step7_AddSalt";
-            };
-
             var addgarlic = await context.CallActivityAsync<bool>("Step7_AddGarlic", null);
 
             var addSoySauce = await context.CallActivityAsync<bool>("Step7_AddSoySauce", null);
@@ -93,7 +87,7 @@ namespace Seasons_of_Serverless_Step7
 
             if (!randomBool)
             {
-                throw new TaskFailedException("Seasoning is not over yet.");
+                throw new FunctionFailedException("Seasoning is not over yet.");
             }
             else
             {
