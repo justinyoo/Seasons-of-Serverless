@@ -393,7 +393,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
             body: {
               To: '@triggerBody()?[\'email\']'
               Subject: 'Your Tteokguk Is Ready!'
-              Body: '<p><img src="@{body(\'HTTP_Step_9\')?[\'tteokgukImageUrl\']}"></p>'
+              Body: '<p><img src="@{json(body(\'HTTP_Step_9\'))?[\'tteokgukImageUrl\']}"></p>'
             }
           }
         }
