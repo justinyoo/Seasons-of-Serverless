@@ -32,8 +32,8 @@ async function getCurrentConditions(callbackUrl) {
         method: 'POST',
         json: true,
         headers: {
-            "Accept": " application/json",
-            "Content-Type": " application/json"
+            // "Accept": "application/json",
+            "Content-Type": "application/json"
         },
         body: `{"completed": true}`
     };
