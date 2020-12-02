@@ -736,4 +736,3 @@ jobs:
         deploymentName: ${{ env.DEPLOYMENT_NAME }}
         template: '${{ env.LOGICAPP_PATH }}/logicapp.json'
         parameters: name=${{ secrets.RESOURCE_NAME }} locationCode=${{ secrets.LOCATION_CODE }} step01Endpoint=${{ env.STEP_1_ENDPOINT }} step02Endpoint=${{ env.STEP_2_ENDPOINT }} step03Endpoint=${{ env.STEP_3_ENDPOINT }} step04Endpoint=${{ env.STEP_4_ENDPOINT }} step05Endpoint=${{ env.STEP_5_ENDPOINT }} step06Endpoint=${{ env.STEP_6_ENDPOINT }} step07Endpoint=${{ env.STEP_7_ENDPOINT }} step08Endpoint=${{ env.STEP_8_ENDPOINT }} step09Endpoint=${{ env.STEP_9_ENDPOINT }}
-
