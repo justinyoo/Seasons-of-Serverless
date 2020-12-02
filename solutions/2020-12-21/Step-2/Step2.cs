@@ -51,6 +51,7 @@ namespace Seasons_of_Serverless_Step2
             }
             //Hardcoding
             RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: 100);
+          
             //test
             //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
             
@@ -70,8 +71,8 @@ namespace Seasons_of_Serverless_Step2
             log.LogInformation($"Check SlicingStatus");
 
             var random = new Random();
-
-            var randomBool = random.Next(2) == 1;            
+          
+            var randomBool = random.Next(2) == 1;
 
             if(!randomBool)
             {

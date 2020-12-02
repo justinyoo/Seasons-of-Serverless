@@ -1,6 +1,6 @@
 import json
 import logging
-from os import getenv
+import os
 from random import choice
 
 import azure.functions as func
@@ -22,10 +22,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         if is_pepper_include:
-            url = str(getenv("PEPPER_CONTAINER"))
+            url = str(os.environ("PEPPER_CONTAINER"))
             container = ContainerClient.from_container_url(url)
         else:
-            url = str(getenv("NO_PEPPER_CONTAINER"))
+            url = str(os.environ("NO_PEPPER_CONTAINER"))
             container = ContainerClient.from_container_url(url)
 
         blob_list = list(container.list_blobs())
