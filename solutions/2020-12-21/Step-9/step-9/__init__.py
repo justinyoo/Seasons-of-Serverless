@@ -22,10 +22,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         if is_pepper_include:
-            url = os.environ("PEPPER_CONTAINER")
+            url = os.environ["PEPPER_CONTAINER"]
             container = ContainerClient.from_container_url(url)
         else:
-            url = os.environ("NO_PEPPER_CONTAINER")
+            url = os.environ["NO_PEPPER_CONTAINER"]
             container = ContainerClient.from_container_url(url)
 
         blob_list = list(container.list_blobs())
