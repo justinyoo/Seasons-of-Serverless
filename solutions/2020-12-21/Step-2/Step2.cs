@@ -49,9 +49,9 @@ namespace Seasons_of_Serverless_Step2
             {
                 log.LogInformation($"Start Step2_Orchestrator with 'timeToSliceValue' during : {step2_RequestData.TimeToSliceInMinutes}minute");
             }
-
-            // RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
-            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: 10);
+            //Hardcoding
+            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: 100);
+          
             //test
             //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: step2_RequestData.TimeToSliceInMinutes);
             
@@ -71,9 +71,8 @@ namespace Seasons_of_Serverless_Step2
             log.LogInformation($"Check SlicingStatus");
 
             var random = new Random();
-
+          
             var randomBool = random.Next(2) == 1;
-            // var randomBool = true;
 
             if(!randomBool)
             {
