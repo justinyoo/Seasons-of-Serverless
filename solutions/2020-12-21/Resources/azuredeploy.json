@@ -174,11 +174,11 @@
             },
             {
               "name": "NO_PEPPER_CONTAINER",
-              "value": "[format('https://{0}{1}/no-pepper/', variables('storage').name, environment().suffixes.storage)]"
+              "value": "[format('https://{0}.{1}/no-pepper/', variables('storage').name, environment().suffixes.storage)]"
             },
             {
               "name": "PEPPER_CONTAINER",
-              "value": "[format('https://{0}{1}/pepper/', variables('storage').name, environment().suffixes.storage)]"
+              "value": "[format('https://{0}.{1}/pepper/', variables('storage').name, environment().suffixes.storage)]"
             }
           ]
         }
