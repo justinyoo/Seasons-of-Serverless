@@ -83,7 +83,8 @@ namespace Seasons_of_Serverless_Step7
 
             var random = new Random();
 
-            var randomBool = random.Next(2) == 1;
+            // var randomBool = random.Next(2) == 1;
+            var randomBool = true;
 
             if (!randomBool)
             {
