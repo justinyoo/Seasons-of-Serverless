@@ -45,7 +45,9 @@ namespace Seasons_of_Serverless_Step7
             {
                 log.LogInformation($"Start Step7_Orchestrator");
             }
-            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: 10);
+
+            //Hardcoding
+            RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromMinutes(1), maxNumberOfAttempts: 100);
             //test
             //RetryOptions retryPolicy = new RetryOptions(firstRetryInterval: TimeSpan.FromSeconds(3), maxNumberOfAttempts: 10);
 
@@ -83,8 +85,7 @@ namespace Seasons_of_Serverless_Step7
 
             var random = new Random();
 
-            // var randomBool = random.Next(2) == 1;
-            var randomBool = true;
+            var randomBool = random.Next(2) == 1;            
 
             if (!randomBool)
             {
