@@ -149,6 +149,9 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
                 email: {
                   type: 'string'
                 }
+                callbackUrl: {
+                  type: 'string'
+                }
               }
             }
           }
@@ -375,7 +378,7 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
             }
           }
         }
-        Send_an_email: {
+        Email_Notification: {
           type: 'ApiConnection'
           runAfter: {
             HTTP_Step_9: [
@@ -394,6 +397,39 @@ resource logapp 'Microsoft.Logic/workflows@2019-05-01' = {
               To: '@triggerBody()?[\'email\']'
               Subject: 'Your Tteokguk Is Ready!'
               Body: '<p><img src="@{body(\'HTTP_Step_9\')?[\'tteokgukImageUrl\']}" with="640"></p>'
+            }
+          }
+        }
+        PowerAutomate_Callback: {
+          type: 'If'
+          runAfter: {
+            HTTP_Step_9: [
+              'Succeeded'
+            ]
+          }
+          expression: {
+            and: [
+              {
+                not: {
+                  equals: [
+                    '@coalesce(triggerBody()?[\'callbackUrl\'], \'\')'
+                    ''
+                  ]
+                }
+              }
+            ]
+          }
+          actions: {
+            HTTP_Callback: {
+              type: 'Http'
+              runAfter: {}
+              inputs: {
+                method: 'POST'
+                uri: '@triggerBody()?[\'callbackUrl\']'
+                body: {
+                  tteokgukImageUrl: '@body(\'HTTP_Step_9\')?[\'tteokgukImageUrl\']'
+                }
+              }
             }
           }
         }
