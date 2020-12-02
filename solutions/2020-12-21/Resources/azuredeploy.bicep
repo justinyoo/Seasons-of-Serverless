@@ -151,6 +151,14 @@ resource fncapp 'Microsoft.Web/sites@2020-06-01' = {
           name: 'WEBSITE_TIME_ZONE'
           value: functionApp.timezone
         }
+        {
+          name: 'NO_PEPPER_CONTAINER'
+          value: 'https://${st.name}${environment().suffixes.storage}/no-pepper/'
+        }
+        {
+          name: 'PEPPER_CONTAINER'
+          value: 'https://${st.name}${environment().suffixes.storage}/pepper/'
+        }
       ]
     }
   }
